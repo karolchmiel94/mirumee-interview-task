@@ -1,10 +1,17 @@
+from django.http.response import HttpResponse
+
 from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+from spacex_api_service.service import get_cores_data
 
 
-class CoresViewSet(viewsets.ViewSet):
-
-    def retrieve(self, request, pk=None):
-        # validate request params
-        # fetch most used cores
-        # return data
-        pass
+@api_view(['GET', ])
+def get_cores(request):
+    # validate query
+    # get cores
+    cores_data = get_cores_data(request.query_params)
+    return HttpResponse('Returned method', status=status.HTTP_200_OK)

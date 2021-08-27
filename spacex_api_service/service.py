@@ -16,9 +16,6 @@ QUERY = """query {
           core {
             id
             reuse_count
-            missions {
-              flight
-            }
           }
           reused
         }
@@ -38,24 +35,27 @@ QUERY = """query {
 """
 
 
-def fetch_cores_data(data):
+def fetch_cores_data(core_number, successful_flights, planned):
     req = requests.post(API_URL, json={'query': QUERY})
     response = json.loads(req.text)
     if response.get('errors'):
         try:
-            raise SpacexAPIServiceException(
-                response.get('errors')[0].get('message'))
+            message = response.get('errors')[0].get('message')
         except:
             raise SpacexAPIServiceException()
+        raise SpacexAPIServiceException(message=message)
     try:
         return api_models.ApiData.parse_obj(response.get('data'))
     except:
         raise DataParsingException()
 
 
-def get_cores_data(data):
-    cores = fetch_cores_data(data)  # fetch data from external api
-    # calculate overall payload mass for each core
+def get_cores_data(core_number=10, successful_flights=None, planned=None):
+    cores = fetch_cores_data(
+        core_number, successful_flights, planned
+    )  # fetch data from external api
+    # filter cores by number given in query
     # sort cores by reused times
+    # calculate overall payload mass for each core
     # return list
     return cores

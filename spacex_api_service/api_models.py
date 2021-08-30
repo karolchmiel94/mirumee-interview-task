@@ -41,3 +41,18 @@ class Launch(BaseModel):
 
 class ApiData(BaseModel):
     launchesPast: List[Launch]
+
+    def filter_launches(self, successful, planned):
+        def iterator(item):
+            if item.launch_success == successful and item.upcoming == planned:
+                return True
+            else:
+                return False
+
+        self.launchesPast = list(filter(iterator, self.launchesPast))
+
+    def return_most_used(self, count):
+        self.launchesPast.sort(
+            key=lambda launch: launch.rocket.first_stage.cores[0].core.reuse_count,
+            reverse=True,
+        )

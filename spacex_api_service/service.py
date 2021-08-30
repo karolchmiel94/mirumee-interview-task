@@ -36,7 +36,7 @@ QUERY = """query {
 """
 
 
-def fetch_cores_data(core_number, successful_flights, planned):
+def fetch_cores_data():
     req = requests.post(API_URL, json={'query': QUERY})
     response = json.loads(req.text)
     if response.get('errors'):
@@ -51,20 +51,34 @@ def fetch_cores_data(core_number, successful_flights, planned):
         raise DataParsingException()
 
 
+def get_return_data_with_weights(cores, count):
+    data = []
+    cores_occurencies = set()
+    for launch in cores.launchesPast:
+        core_id = launch.rocket.first_stage.cores[0].core.id
+        if core_id in cores_occurencies:
+            continue
+        else:
+            cores_occurencies.add(core_id)
+        used_count = launch.rocket.first_stage.cores[0].core.reuse_count
+        weight = 0
+        for mass in launch.rocket.rocket.payload_weights:
+            weight += mass.kg
+        data.append((core_id, used_count, weight))
+        if len(data) == count:
+            break
+    return data
+
+
 def get_cores_data(core_number=10, successful_flights=None, planned=None):
-    cores = fetch_cores_data(
-        core_number, successful_flights, planned
-    )  # fetch data from external api
-    # cores.launches.sort(key=attrgetter(
-    #     'rocket.first_stage.cores[0].core.reuse_count'), reverse=True)
-    for rocket in cores.launches:
-        print('rocket_id: {rocket_id}'.format(rocket_id=rocket.id))
-        print('first core reuse count: {num}'.format(
-            num=rocket.rocket.first_stage.cores[0].core.reuse_count))
-    cores.launches.sort(
-        key=api_models.Rocket.first_stage.cores[0].core.reuse_count, reverse=True)
-    # filter cores by number given in query
-    # sort cores by reused times
-    # calculate overall payload mass for each core
-    # return list
-    return cores
+    cores = fetch_cores_data()  # fetch data from external api
+    cores.filter_launches(
+        successful_flights, planned
+    )  # filter by successful and planned
+    cores.return_most_used(
+        core_number
+    )  # sort by reused number and returned requested count
+    response = get_return_data_with_weights(
+        cores, core_number
+    )  # calculate overall payload mass for each core
+    return response

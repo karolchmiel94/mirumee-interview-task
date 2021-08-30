@@ -5,6 +5,9 @@ class SpacexAPIServiceException(Exception):
         self.message = message
         super().__init__(self.message)
 
+    def __str__(self):
+        return self.message
+
 
 class DataParsingException(Exception):
     """Error while parsing data via pydantic"""
@@ -12,3 +15,6 @@ class DataParsingException(Exception):
     def __init__(self, message='Data returned from API could not been parsed.'):
         self.message = message
         super().__init__(self.message)
+
+    def __str__(self):
+        return self.message

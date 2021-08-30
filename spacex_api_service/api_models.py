@@ -40,4 +40,4 @@ class Launch(BaseModel):
 
 
 class ApiData(BaseModel):
-    launches: List[Launch]
+    launchesPast: List[Launch]

@@ -51,10 +51,12 @@ def fetch_cores_data():
         raise DataParsingException()
 
 
-def get_return_data_with_weights(cores, count):
+def get_return_data_with_calculated_weights(cores, count):
     data = []
     cores_occurencies = set()
     for launch in cores.launchesPast:
+        if count is not None and len(data) == count:
+            break
         core_id = launch.rocket.first_stage.cores[0].core.id
         if core_id in cores_occurencies:
             continue
@@ -65,23 +67,18 @@ def get_return_data_with_weights(cores, count):
         for mass in launch.rocket.rocket.payload_weights:
             weight += mass.kg
         data.append((core_id, used_count, weight))
-        if count is not None and len(data) == count:
-            break
     return data
 
 
-def get_cores_data(
-    core_number=10, successful_flights=None, planned=None, raw_data=True
-):
+def get_cores_data(core_number=None, successful_flights=None, planned=None):
     cores = fetch_cores_data()  # fetch data from external api
-    if not raw_data:
-        cores.filter_launches(
-            successful_flights, planned
-        )  # filter by successful and planned
-        cores.return_most_used(
-            core_number
-        )  # sort by reused number and returned requested count
-    response = get_return_data_with_weights(
+    cores.filter_launches(
+        successful_flights, planned
+    )  # filter by successful and planned
+    cores.return_most_used(
+        core_number
+    )  # sort by reused number and returned requested count
+    response = get_return_data_with_calculated_weights(
         cores, core_number
     )  # calculate overall payload mass for each core
     return response

@@ -43,6 +43,9 @@ class ApiData(BaseModel):
     launchesPast: List[Launch]
 
     def filter_launches(self, successful, planned):
+        if successful is None and planned is None:
+            return
+
         def iterator(item):
             if item.launch_success == successful and item.upcoming == planned:
                 return True

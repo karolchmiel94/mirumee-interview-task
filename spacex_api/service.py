@@ -4,49 +4,14 @@ import requests
 from operator import attrgetter
 
 from . import api_models
-from .exceptions import SpacexAPIServiceException, DataParsingException
-
-API_URL = 'https://api.spacex.land/graphql'
-
-QUERY = """query {
-  launchesPast {
-    id
-    rocket {
-      first_stage {
-        cores {
-          core {
-            id
-            reuse_count
-          }
-          reused
-        }
-      }
-      rocket {
-        id
-        payload_weights {
-          kg
-          id
-        }
-      }
-    }
-    launch_success
-    upcoming
-  }
-}
-"""
+from .connection import fetch_data_with_query
+from .exceptions import DataParsingException
 
 
-def fetch_cores_data():
-    req = requests.post(API_URL, json={'query': QUERY})
-    response = json.loads(req.text)
-    if response.get('errors'):
-        try:
-            message = response.get('errors')[0].get('message')
-        except:
-            raise SpacexAPIServiceException()
-        raise SpacexAPIServiceException(message=message)
+def fetch_and_parse_data():
+    data = fetch_data_with_query()
     try:
-        return api_models.ApiData.parse_obj(response.get('data'))
+        return api_models.ApiData.parse_obj(data.get('data'))
     except:
         raise DataParsingException()
 
@@ -71,7 +36,7 @@ def get_return_data_with_calculated_weights(cores, count):
 
 
 def get_cores_data(core_number=None, successful_flights=None, planned=None):
-    cores = fetch_cores_data()  # fetch data from external api
+    cores = fetch_and_parse_data()  # fetch data from external api
     cores.filter_launches(
         successful_flights, planned
     )  # filter by successful and planned

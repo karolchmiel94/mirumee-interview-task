@@ -1,17 +1,14 @@
 import json
-from django.http.response import HttpResponse
 
 from rest_framework import viewsets, mixins
 from rest_framework import status, permissions
-from rest_framework.fields import CurrentUserDefault
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 
-from spacex_api_service.service import get_cores_data
+from spacex_api.service import get_cores_data
+from utilities.parser import parse_string_to_bool
 from .serializers import CoreSerializer, FavouriteCoreSerializer
-from .validators import parse_string_to_bool
 from ..models import Core, FavouriteCore
+from ..service import fetch_cores_if_not_in_database
 
 
 class FetchCoreViewSet(viewsets.ViewSet):
@@ -57,7 +54,8 @@ class FetchCoreViewSet(viewsets.ViewSet):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
         try:
-            cores_data = get_cores_data(core_number, successful_flights, planned)
+            cores_data = get_cores_data(
+                core_number, successful_flights, planned)
             return Response(cores_data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
@@ -69,12 +67,7 @@ class CoreViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     serializer_class = CoreSerializer
 
     def list(self, request, *args, **kwargs):
-        if Core.objects.count() == 0:
-            cores = get_cores_data(None, None, None)
-            for core in cores:
-                obj, created = Core.objects.get_or_create(
-                    core_id=core[0], reuse_count=core[1], mass_delivered=core[2]
-                )
+        fetch_cores_if_not_in_database()
         return super().list(request, *args, **kwargs)
 
 

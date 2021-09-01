@@ -47,10 +47,12 @@ class ApiData(BaseModel):
             return
 
         def iterator(item):
-            if item.launch_success == successful and item.upcoming == planned:
-                return True
+            if successful is None:
+                return item.upcoming == planned
+            elif planned is None:
+                return item.launch_success == successful
             else:
-                return False
+                return item.launch_success == successful and item.upcoming == planned
 
         self.launchesPast = list(filter(iterator, self.launchesPast))
 

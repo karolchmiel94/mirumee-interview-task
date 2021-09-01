@@ -78,14 +78,18 @@ List of  most used first stages can be fetched from:
 GET /fetch-cores/
 
 query parameters:
+
 cores_number: integer
+
     description: Number of the most popularly used cores
     paramType: query
 successful: boolean
+
     description: Include or exclude successful missions
     values: True / False
     paramType: query
 planned: boolean
+
     description: Include or exclude planned missions
     values: True / False
     paramType: query

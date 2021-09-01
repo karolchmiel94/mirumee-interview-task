@@ -12,7 +12,6 @@ class CoreSerializer(serializers.ModelSerializer):
 
 
 class FavouriteCoreSerializer(serializers.ModelSerializer):
-    # core = serializers.CharField(source='core.core_id')
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:

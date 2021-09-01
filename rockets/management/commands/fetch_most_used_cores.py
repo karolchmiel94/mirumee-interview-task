@@ -36,7 +36,3 @@ class Command(BaseCommand):
         cores = get_cores_data(cores_number, successful, planned)
         self.stdout.write('Fetching has been finished.')
         self.stdout.write(str(cores))
-
-# Command example: python manage.py fetch_most_used_cores 11 -successful True -planned False
-# Command example: python manage.py fetch_most_used_cores 3
-# Command example: python manage.py fetch_most_used_cores

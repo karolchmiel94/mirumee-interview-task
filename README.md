@@ -71,7 +71,7 @@ Project isn't dockerized yet. To run it run:
 <!-- Functionalities description -->
 ## Functionalities description
 
-- First task
+### First task ###
 
 List of  most used first stages can be fetched from:
 GET /fetch-cores/
@@ -88,7 +88,7 @@ query parameters:
     values: True / False
     paramType: query
 
-available commands:
+#### Available commands: ####
 
 - fetch_most_used_cores
 
@@ -109,7 +109,7 @@ Fetch 3 cores:
 Fetch 11 cores from successful launches without planned future missions:
 > python manage.py fetch_most_used_cores 11 -successful True -planned False
 
-- Second task
+### Second task ###
 
 List of cores. If there is no cores saved in database, they are fetched from SpaceX api:
 GET /cores/
@@ -125,3 +125,13 @@ POST /favourite-cores/
 
 List favourite cores:
 GET /favourites-cores/
+
+#### Available commands ####
+
+- create_test_data
+
+Command creates 3 test users, and fetches and creates core data in database
+
+Example use:
+
+> python manage.py create_test_data

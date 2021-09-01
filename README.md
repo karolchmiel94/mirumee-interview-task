@@ -74,16 +74,18 @@ Project isn't dockerized yet. To run it run:
 ### First task ###
 
 List of  most used first stages can be fetched from:
+
 GET /fetch-cores/
+
 query parameters:
-- cores_number: integer
+cores_number: integer
     description: Number of the most popularly used cores
     paramType: query
-- successful: boolean
+successful: boolean
     description: Include or exclude successful missions
     values: True / False
     paramType: query
-- planned: boolean
+planned: boolean
     description: Include or exclude planned missions
     values: True / False
     paramType: query

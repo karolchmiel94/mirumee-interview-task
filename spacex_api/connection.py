@@ -38,10 +38,9 @@ def fetch_data_with_query(query=QUERY):
     response = json.loads(request.text)
     if response.get('errors'):
         try:
-            message = None
-            for message in response.get('errors'):
-                message += message + '. '
-            message = response.get('errors')[0].get('message')
+            message = str()
+            for text in response.get('errors'):
+                message += text.get('message') + '. '
         except:
             raise SpacexAPIServiceException()
         raise SpacexAPIServiceException(message=message)

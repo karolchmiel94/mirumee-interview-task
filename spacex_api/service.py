@@ -35,15 +35,15 @@ def get_return_data_with_calculated_weights(cores, count):
     return data
 
 
-def get_cores_data(core_number=None, successful_flights=None, planned=None):
+def get_cores_data(cores_number=None, successful_flights=None, planned=None):
     cores = fetch_and_parse_data()  # fetch data from external api
     cores.filter_launches(
         successful_flights, planned
     )  # filter by successful and planned
     cores.return_most_used(
-        core_number
+        cores_number
     )  # sort by reused number and returned requested count
     response = get_return_data_with_calculated_weights(
-        cores, core_number
+        cores, cores_number
     )  # calculate overall payload mass for each core
     return response

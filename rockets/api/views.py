@@ -5,7 +5,7 @@ from rest_framework import status, permissions
 from rest_framework.response import Response
 
 from spacex_api.service import get_cores_data
-from utilities.parser import parse_string_to_bool
+from utilities.query_parser import parse_param_to_bool, parse_param_to_int
 from .serializers import CoreSerializer, FavouriteCoreSerializer
 from ..models import Core, FavouriteCore
 from ..service import fetch_cores_if_not_in_database
@@ -26,36 +26,14 @@ class FetchCoreViewSet(viewsets.ViewSet):
     """
 
     def list(self, request, format=None):
-        core_number = request.query_params.get('cores_number')
-        if core_number is not None:
-            try:
-                core_number = int(core_number)
-            except ValueError as e:
-                return Response(
-                    'Cores number has to be integer.',
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        successful_flights = request.query_params.get('successful')
-        if successful_flights is not None:
-            try:
-                successful_flights = parse_string_to_bool(successful_flights)
-            except ValueError as e:
-                return Response(
-                    'Parameter successful has to have value of True or False.',
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        planned = request.query_params.get('planned')
-        if planned is not None:
-            try:
-                planned = parse_string_to_bool(planned)
-            except ValueError as e:
-                return Response(
-                    'Parameter planned has to have value of True or False.',
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
         try:
+            cores_number = parse_param_to_int(
+                request.query_params, 'cores_number')
+            successful_flights = parse_param_to_bool(
+                request.query_params, 'successful')
+            planned = parse_param_to_bool(request.query_params, 'planned')
             cores_data = get_cores_data(
-                core_number, successful_flights, planned)
+                cores_number, successful_flights, planned)
             return Response(cores_data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)

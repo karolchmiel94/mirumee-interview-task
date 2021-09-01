@@ -99,10 +99,12 @@ planned: boolean
 - fetch_most_used_cores
 
 Command fetches most used first stages sorted descending by number of uses.
+
 Command arguments:
-cores_number: int | Optional
--successful: str | Optional
--planned: str | Optional
+
+    cores_number: int | Optional
+    successful: str | Optional
+    planned: str | Optional
 
 Example uses:
 
@@ -121,15 +123,16 @@ List of cores. If there is no cores saved in database, they are fetched from Spa
 GET /cores/
 
 Add core to favourites:
-POST /favourite-cores/
-{
 
+POST /favourite-cores/
+
+{
   "core" : "CORE_ID",
   "user" : "USER_ID",
-
 }
 
 List favourite cores:
+
 GET /favourites-cores/
 
 #### Available commands ####

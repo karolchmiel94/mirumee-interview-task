@@ -63,9 +63,7 @@ class FetchCoreViewSet(viewsets.ViewSet):
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
 
 
-class CoreViewSet(
-    viewsets.GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin
-):
+class CoreViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     model = Core
     queryset = Core.objects.all()
     serializer_class = CoreSerializer

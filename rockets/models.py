@@ -7,8 +7,8 @@ class Core(models.Model):
     reuse_count = models.PositiveSmallIntegerField(default=0, blank=True)
     mass_delivered = models.IntegerField(null=True, blank=True)
 
-    # def __str__(self):
-    #     return self.core_id
+    def __str__(self):
+        return self.core_id
 
 
 class FavouriteCore(models.Model):

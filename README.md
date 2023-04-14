@@ -16,7 +16,7 @@ email: karolch94@gmail.com
     </a> -->
     <h3 align="center"><a href="https://github.com/karolchmiel94/mirumee-interview-task">mirumee-interview-task</a></h3>
     <p align="center">
-         Are you a fan of first stage rocket's cores? Check this project and see which one was used the most and add it to as your favourite!
+         Are you a fan of first stage rocket cores? Check out this project, see which core was used the most and add it to as your favourite!
         <br />
         <br />
     </p>
